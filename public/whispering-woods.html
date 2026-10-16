@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en-GB"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The Whispering Woods</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#4a2c12;--card:#fff8e6;--btn:#fff;--line:#e9b86b;--sk1:#a8e0ff;--sk2:#fff1bd;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--ink:#fff1d6;--card:#2c2240;--btn:#3d3158;--line:#7a5cc0}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;margin:0;overflow:hidden;background:#2c2240;font-family:"Baloo 2","Comic Sans MS","Trebuchet MS",sans-serif;color:var(--ink)}
+#app{height:100%;display:flex;flex-direction:column}
+#top{display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--card);border-bottom:4px solid var(--line)}
+#trail{flex:1;display:flex;justify-content:center;gap:clamp(8px,3vw,28px)}
+.dot{width:clamp(34px,9vw,48px);aspect-ratio:1;border-radius:50%;display:grid;place-items:center;font-size:clamp(18px,5vw,26px);background:var(--btn);border:3px dashed var(--line);filter:grayscale(1);opacity:.6}
+.dot.now{filter:none;opacity:1;border-style:solid;animation:pulse 1.2s infinite}.dot.done{filter:none;opacity:1;background:#b8f5c4;border-style:solid}
+#stars{font-size:22px;font-weight:800;min-width:64px}
+.ib{font-size:24px;border:3px solid var(--line);background:var(--btn);border-radius:50%;width:46px;height:46px;cursor:pointer}
+#scene{flex:1;min-height:0;position:relative;overflow:hidden;background:linear-gradient(var(--sk1),var(--sk2));transition:background 1.5s}
+#scene[data-stage="1"]{--sk1:#7fd3ff;--sk2:#e3fbff}#scene[data-stage="2"]{--sk1:#ffb36b;--sk2:#ffe9a8}#scene[data-stage="3"]{--sk1:#ff9a8a;--sk2:#ffd9a0}#scene[data-stage="4"]{--sk1:#3b2a6b;--sk2:#9b5fb0}
+.cloud{position:absolute;font-size:56px;opacity:.9;animation:cl 40s linear infinite}
+@keyframes cl{from{transform:translateX(-120px)}to{transform:translateX(110vw)}}
+.ground{position:absolute;left:0;right:0;bottom:0;height:24%;background:linear-gradient(#92d95c,#5aa63a);border-top:5px solid #77c24a}
+#trees{position:absolute;left:0;bottom:22%;font-size:clamp(46px,9vw,72px);white-space:nowrap;letter-spacing:-6px}
+.walk #trees{animation:sway 2.2s ease-in-out}
+@keyframes sway{50%{transform:translateX(-60px)}}
+.ff{position:absolute;animation:ff 5s ease-in-out infinite;opacity:.8}
+@keyframes ff{50%{transform:translate(30px,-26px);opacity:.2}}
+.p{position:absolute;line-height:1;animation:slin 1.4s ease-out both}
+@keyframes slin{from{transform:translateX(110vw)}}
+.stone{width:clamp(44px,9vw,64px);aspect-ratio:1;border-radius:50%;background:#b9b3a8;border:4px solid #8d867a;display:grid;place-items:center;font-size:clamp(18px,4.4vw,28px);font-weight:800;bottom:15%;color:#4a4033}
+.river{position:absolute;left:24%;width:56%;bottom:8%;height:26%;background:repeating-linear-gradient(100deg,#4fb7ee 0 30px,#7ad0ff 30px 60px);background-size:120px 100%;animation:flow 2s linear infinite;border-radius:30px;opacity:.95}
+@keyframes flow{to{background-position:120px 0}}
+.chest{position:absolute;width:clamp(60px,12vw,90px);height:clamp(40px,8vw,58px);animation:slin 1.4s ease-out both}
+.chest b{position:absolute;inset:40% 0 0;background:linear-gradient(#ffd54a,#e0a010);border:4px solid #9a6a00;border-radius:6px}
+.chest i{position:absolute;inset:0 0 55%;background:linear-gradient(#ffe27a,#f0b820);border:4px solid #9a6a00;border-radius:24px 24px 4px 4px;transform-origin:0 100%;transition:transform 1s}
+.chest.open i{transform:rotate(-70deg)}
+#pip{position:absolute;bottom:13%;left:8%;width:clamp(110px,22vw,170px);transition:left 1.8s ease-in-out;z-index:5}
+#pip svg{width:100%;display:block;animation:idle 2.4s ease-in-out infinite}
+#pip .hat{position:absolute;right:8%;top:-8%;font-size:34px;display:none;transform:rotate(15deg)}
+#pip.walking svg{animation:bob .32s ease-in-out infinite}
+#pip.hop svg{animation:hop .7s ease-out}
+.tail{transform-origin:40px 78px;animation:wag 1s ease-in-out infinite}
+.walking .tail{animation-duration:.3s}
+.leg{transform-origin:center 88px}.walking .l1,.walking .l4{animation:leg .32s infinite}.walking .l2,.walking .l3{animation:leg .32s infinite reverse}
+@keyframes leg{50%{transform:rotate(28deg)}}@keyframes wag{50%{transform:rotate(14deg)}}
+@keyframes idle{50%{transform:translateY(-4px)}}@keyframes bob{50%{transform:translateY(-9px)}}
+@keyframes hop{40%{transform:translateY(-70px) scale(1.05)}}
+#owlbox{position:absolute;left:8px;top:8px;right:8px;display:flex;gap:8px;align-items:flex-start;z-index:8}
+#owl{width:clamp(70px,17vw,100px);flex:none;animation:idle 3s infinite}
+#owl .wing{transform-origin:20px 60px}#owl.talk .wing{animation:flap .35s infinite}
+#owl .lid{animation:blink 4s infinite;transform-origin:center}
+@keyframes flap{50%{transform:rotate(-25deg)}}@keyframes blink{0%,94%,100%{transform:scaleY(0)}97%{transform:scaleY(1)}}
+#bubble{background:#fff;color:#4a2c12;border:4px solid #e9b86b;border-radius:24px;padding:8px 14px;font-size:clamp(18px,4.6vw,26px);font-weight:600;line-height:1.15;flex:1;max-width:560px;position:relative}
+#listen{flex:none;width:clamp(56px,13vw,72px);height:clamp(56px,13vw,72px);font-size:clamp(28px,7vw,36px);border-radius:50%;border:4px solid #fff;background:#ff8a3d;cursor:pointer;box-shadow:0 5px 0 #c4561a}
+#panel{background:var(--card);border-top:5px solid var(--line);padding:10px 12px 14px;max-height:50%;overflow-y:auto;text-align:center}
+.big{display:flex;justify-content:center;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px;font-size:clamp(34px,9vw,60px);font-weight:800}
+.snd,.chip{font:inherit;font-size:clamp(34px,9vw,56px);font-weight:800;min-width:clamp(72px,18vw,100px);height:clamp(72px,18vw,100px);padding:0 14px;border-radius:50%;border:5px solid #ff8a3d;background:#fff;color:#4a2c12;cursor:pointer;box-shadow:0 6px 0 #d46a22}
+.chip{border-radius:28px;height:clamp(64px,15vw,84px);font-size:clamp(28px,7vw,44px);border-color:#5aa0ff;box-shadow:0 6px 0 #2f6fcf;transition:.2s}.chip.read{background:#fff3a0;transform:translateY(-6px)}
+.slot{display:inline-grid;place-items:center;width:clamp(64px,16vw,90px);height:clamp(76px,18vw,100px);border-bottom:6px solid #5aa0ff;font-size:clamp(46px,12vw,70px);margin:0 4px}
+.opts{display:flex;gap:clamp(8px,2.5vw,18px);justify-content:center;flex-wrap:wrap}
+.opt{font:inherit;font-size:clamp(44px,11vw,70px);line-height:1;min-width:clamp(92px,26vw,170px);min-height:clamp(96px,24vw,140px);padding:8px 14px;border-radius:30px;border:5px solid var(--line);background:var(--btn);color:var(--ink);cursor:pointer;box-shadow:0 7px 0 var(--line);transition:transform .1s}
+.opt:active,.snd:active,.chip:active{transform:translateY(5px);box-shadow:none}
+.opt small{display:block;font-size:clamp(18px,4.5vw,26px);font-weight:800}
+.opt.yes{background:#b8f5c4;border-color:#2fa84f;animation:pop .5s}.opt.no{animation:shake .4s}.opt.help{border-color:#ffb300;animation:bounce .6s infinite}
+@keyframes pop{50%{transform:scale(1.15)}}@keyframes shake{25%{transform:translateX(-10px)}75%{transform:translateX(10px)}}@keyframes bounce{50%{transform:translateY(-12px)}}@keyframes pulse{50%{transform:scale(1.15)}}
+.go{font:inherit;font-size:clamp(28px,8vw,44px);font-weight:800;padding:14px 36px;border-radius:50px;border:5px solid #fff;background:#43c463;color:#fff;cursor:pointer;box-shadow:0 8px 0 #2a8a44;margin:6px}
+#intro,#end{position:absolute;inset:0;z-index:20;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:6px;padding:16px;background:linear-gradient(#3b2a6b,#ff9a6b);color:#fff}
+#intro h1,#end h1{font-size:clamp(36px,10vw,68px);margin:0;line-height:1;text-shadow:0 4px 0 #0004}
+#intro p,#end p{font-size:clamp(20px,5vw,30px);margin:0;max-width:520px}
+.hide{display:none!important}
+.mic{font-size:clamp(48px,12vw,64px);width:clamp(110px,28vw,150px);aspect-ratio:1;border-radius:50%;border:6px solid #fff;background:#ff4f6d;box-shadow:0 8px 0 #b3223d;cursor:pointer;margin:4px}.mic.on{background:#43c463;box-shadow:0 8px 0 #2a8a44;animation:pulse .6s infinite}
+.heard{min-height:38px;font-size:clamp(20px,5vw,28px);font-weight:600;margin:4px}.adult{font:inherit;font-size:17px;padding:8px 14px;border-radius:20px;border:3px solid var(--line);background:var(--btn);color:var(--ink);margin:4px;cursor:pointer}
+.conf{position:fixed;top:-60px;font-size:32px;animation:fall 3.4s linear forwards;z-index:30;pointer-events:none}
+@keyframes fall{to{transform:translateY(110vh) rotate(540deg)}}
+#sum{position:absolute;inset:0;z-index:40;background:var(--card);overflow:auto;padding:16px;text-align:left}
+#sum table{border-collapse:collapse;width:100%;max-width:720px;margin:0 auto;font-size:18px}#sum td,#sum th{padding:7px;border-bottom:2px solid var(--line)}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01s!important;animation-iteration-count:1!important}}
+</style></head><body>
+<div id="app">
+ <div id="top"><div id="stars">⭐ 0</div><div id="trail"></div><button class="ib" id="snd" aria-label="Sound">🔊</button></div>
+ <div id="scene" data-stage="0">
+  <span class="cloud" style="top:30%">☁️</span><span class="cloud" style="top:44%;animation-delay:-18s">☁️</span>
+  <div id="trees">🌲🌳🌲🌲🌳🌲🌳🌲🌲🌳🌲🌳🌲🌲🌳</div>
+  <div class="ground"></div>
+  <span class="ff" style="left:20%;top:50%">✨</span><span class="ff" style="left:55%;top:40%;animation-delay:-2s">✨</span><span class="ff" style="left:80%;top:55%;animation-delay:-3s">🦋</span>
+  <div id="props"></div>
+  <div id="pip"><span class="hat">🧢</span>
+   <svg viewBox="0 0 150 120"><g class="tail"><path d="M40 78C5 70 0 40 22 30C30 50 45 55 52 66Z" fill="#f28a2e"/><path d="M22 30C12 36 8 48 14 58C20 52 28 40 22 30Z" fill="#fff"/></g>
+   <rect class="leg l2" x="48" y="88" width="11" height="24" rx="5" fill="#7a3b12"/><rect class="leg l3" x="62" y="88" width="11" height="24" rx="5" fill="#7a3b12"/>
+   <ellipse cx="72" cy="78" rx="36" ry="24" fill="#f28a2e"/><ellipse cx="90" cy="86" rx="20" ry="14" fill="#fff4e0"/>
+   <rect class="leg l1" x="84" y="88" width="11" height="24" rx="5" fill="#7a3b12"/><rect class="leg l4" x="98" y="88" width="11" height="24" rx="5" fill="#7a3b12"/>
+   <rect x="54" y="62" width="26" height="22" rx="5" fill="#8b5a2b"/><path d="M58 64L96 50" stroke="#6b4220" stroke-width="4"/>
+   <polygon points="92,38 96,8 112,30" fill="#f28a2e"/><polygon points="96,32 98,18 106,30" fill="#ffb7a0"/><polygon points="112,32 128,10 130,42" fill="#f28a2e"/>
+   <circle cx="110" cy="54" r="24" fill="#f28a2e"/><path d="M92 62Q110 88 136 62Q124 72 110 67Q100 72 92 62Z" fill="#fff4e0"/>
+   <circle cx="134" cy="60" r="5" fill="#2b1a10"/><circle cx="112" cy="48" r="5" fill="#2b1a10"/><circle cx="114" cy="46" r="1.8" fill="#fff"/><circle cx="126" cy="50" r="4" fill="#2b1a10"/><path d="M118 70Q126 76 132 68" stroke="#2b1a10" stroke-width="2.5" fill="none" stroke-linecap="round"/></svg></div>
+  <div id="owlbox">
+   <svg id="owl" viewBox="0 0 100 110"><polygon points="22,24 26,4 40,18" fill="#8a5a2c"/><polygon points="78,24 74,4 60,18" fill="#8a5a2c"/><ellipse cx="50" cy="66" rx="34" ry="40" fill="#a8703a"/><ellipse cx="50" cy="76" rx="22" ry="28" fill="#f6dfb4"/>
+   <circle cx="34" cy="42" r="15" fill="#fff"/><circle cx="66" cy="42" r="15" fill="#fff"/><circle cx="34" cy="42" r="15" fill="none" stroke="#c0392b" stroke-width="3"/><circle cx="66" cy="42" r="15" fill="none" stroke="#c0392b" stroke-width="3"/><path d="M49 44h2" stroke="#c0392b" stroke-width="3"/>
+   <circle cx="36" cy="43" r="7" fill="#2b1a10"/><circle cx="64" cy="43" r="7" fill="#2b1a10"/><circle cx="38" cy="40" r="2.2" fill="#fff"/><circle cx="66" cy="40" r="2.2" fill="#fff"/>
+   <g class="lid"><circle cx="34" cy="42" r="15" fill="#a8703a"/><circle cx="66" cy="42" r="15" fill="#a8703a"/></g>
+   <polygon points="44,54 56,54 50,66" fill="#ff9d2e"/><g class="wing"><ellipse cx="20" cy="70" rx="10" ry="24" fill="#8a5a2c"/></g><ellipse cx="80" cy="70" rx="10" ry="24" fill="#8a5a2c"/><rect x="38" y="104" width="8" height="6" fill="#ff9d2e"/><rect x="54" y="104" width="8" height="6" fill="#ff9d2e"/></svg>
+   <div id="bubble">Hello! I am Ms Ria.</div><button id="listen" aria-label="Hear it again">🔊</button>
+  </div>
+ </div>
+ <div id="panel"></div>
+</div>
+<div id="intro"><div style="font-size:clamp(70px,20vw,120px)">🦊🌲</div><h1>The Whispering Woods</h1><p>Help Pip the Fox find the Golden Chest!</p><p>🎤 Say your answers out loud!</p><button class="go" id="start">▶ Let's go!</button></div>
+<div id="end" class="hide"><div style="font-size:clamp(70px,20vw,110px)">🏆🦊🎉</div><h1>We did it!</h1><p id="endstars"></p><div><button class="go" id="again">🔁 Play again</button><button class="go" id="grown" style="background:#7a5cc0">👩‍🏫 Grown-up page</button></div></div>
+<div id="sum" class="hide"></div>
+<script>
+const $=s=>document.querySelector(s),sleep=ms=>new Promise(r=>setTimeout(r,ms));
+let sound=true,res={},stars=0,last=['',''],pip=$('#pip'),scene=$('#scene');
+const IC=['🧢','🪨','🏮','📜','🔥'],SW={c:'kuh',a:'ah',p:'puh',h:'huh',d:'duh',m:'mmm',sh:'shhh',ch:'chuh',th:'thhh',ee:'eee',oa:'ohh',b:'buh',t:'tuh',f:'fff',i:'ih',s:'sss',e:'eh',o:'oh',I:'eye'};
+$('#trail').innerHTML=IC.map(i=>`<div class="dot">${i}</div>`).join('');
+function say(t,r=.85){if(!sound||!window.speechSynthesis)return Promise.resolve();speechSynthesis.cancel();return new Promise(ok=>{const u=new SpeechSynthesisUtterance(t);u.lang='en-GB';u.rate=r;u.pitch=1.2;u.onend=ok;u.onerror=ok;speechSynthesis.speak(u);setTimeout(ok,8000)})}
+function ria(t,sp){last=[t,sp||t];$('#bubble').textContent=t;$('#owl').classList.add('talk');return say(sp||t).then(()=>$('#owl').classList.remove('talk'))}
+const rec=(k,ok)=>{res[k]=(res[k]!=='amber'&&ok)?'green':'amber'};
+const star=()=>{stars++;$('#stars').textContent='⭐ '+stars};
+function ask(o){return new Promise(done=>{let wrong=0,lock=false;
+ $('#panel').innerHTML=`<div class="big">${o.big||''}</div><div class="opts">${o.opts.map((x,i)=>`<button class="opt">${x.h}</button>`).join('')}</div>`;
+ ria(o.text,o.speak);const bs=[...document.querySelectorAll('.opt')];
+ bs.forEach((b,i)=>b.onclick=()=>{if(lock)return;const x=o.opts[i];if(x.s)say(x.s);
+  if(x.ok){lock=true;if(o.skill)rec(o.skill,!wrong);if(!wrong)star();b.classList.add('yes');setTimeout(()=>ria(pick(['Yes! Well done!','Brilliant!','You did it!','Super!'])),x.s?900:200);setTimeout(done,2200)}
+  else{wrong++;if(o.skill)rec(o.skill,false);b.classList.remove('no');void b.offsetWidth;b.classList.add('no');setTimeout(()=>ria(o.hint||'Have another go!'),x.s?900:0);if(wrong>1)bs[o.opts.findIndex(y=>y.ok)].classList.add('help')}})})}
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;let H={};
+const fbk=o=>typeof o.fb==='function'?o.fb():ask(o.fb);
+function voice(o){return new Promise(done=>{
+ if(!SR)return fbk(o).then(done);
+ let wrong=0,busy=false,gone=false;
+ $('#panel').innerHTML=`<div class="big">${o.big||''}</div><button class="mic" id="mic" aria-label="Talk">🎤</button><div class="heard" id="heard">Tap the mic and say it!</div><button class="adult" id="adult">👩‍🏫 ✔ They said it</button><button class="adult" id="tapit">👆 Use buttons</button>`;
+ ria(o.text,o.speak);
+ const hd=$('#heard'),mic=$('#mic');
+ const ok=(t,force)=>{if(gone)return;gone=true;const g=force||!o.grade||o.grade(t||'');if(o.skill){rec(o.skill,g&&!wrong);if(t)H[o.skill]=t}if(g&&!wrong)star();ria(pick(['Yes! Well done!','Brilliant talking!','I heard you!']));setTimeout(done,2200)};
+ const tap=()=>{if(gone)return;gone=true;fbk(o).then(done)};
+ $('#adult').onclick=()=>ok('',1);$('#tapit').onclick=tap;
+ mic.onclick=()=>{if(busy||gone)return;speechSynthesis.cancel();busy=true;mic.classList.add('on');hd.textContent='Listening... 👂';
+  const r=new SR();r.lang='en-GB';r.interimResults=true;let txt='',bad=0;
+  r.onresult=e=>{txt=[...e.results].map(x=>x[0].transcript).join(' ').toLowerCase();hd.textContent='🗣️ '+txt;o.live&&o.live(txt)};
+  r.onerror=e=>{if(e.error==='not-allowed'||e.error==='service-not-allowed'){bad=1;hd.textContent='The microphone is off. Use the buttons!';setTimeout(tap,1500)}};
+  r.onend=()=>{busy=false;mic.classList.remove('on');if(bad||gone)return;if(!txt){hd.textContent="I didn't hear you. Tap the mic and try again!";return}
+   if(o.check(txt))ok(txt);else{wrong++;if(o.skill)rec(o.skill,false);ria(o.hint||'Have another go!');if(wrong>1)setTimeout(tap,3500)}};
+  try{r.start()}catch(e){busy=false;tap()}}
+})}
+const sb=a=>a.map(s=>`<button class="snd" data-s="${s}">${s}</button>`).join('');
+document.addEventListener('click',e=>{const b=e.target.closest('.snd');if(b)say(SW[b.dataset.s]||b.dataset.s,.7)});
+$('#listen').onclick=()=>say(last[1]);
+$('#snd').onclick=e=>{sound=!sound;e.target.textContent=sound?'🔊':'🔇';if(!sound)speechSynthesis.cancel()};
+function move(pct,hop){return new Promise(ok=>{pip.style.left=pct+'%';if(hop){pip.classList.remove('hop');void pip.offsetWidth;pip.classList.add('hop');setTimeout(ok,900)}else{pip.classList.add('walking');setTimeout(()=>{pip.classList.remove('walking');ok()},1800)}})}
+const SX=[30,41,52,63,74];
+const P=[
+`<span class="p" id="hat" style="left:44%;bottom:12%;font-size:46px">🧢</span><span class="p" style="left:30%;bottom:11%;font-size:48px">🐱</span><span class="p" style="left:66%;bottom:20%;font-size:96px">🌿</span><span class="p" id="box" style="left:72%;bottom:19%;font-size:70px">📦</span>`,
+`<div class="river"></div>${['sh','ch','th','ee','oa'].map((d,i)=>`<span class="p stone" id="st${i}" style="left:${SX[i]}%">${d}</span>`).join('')}<span class="p" style="left:88%;bottom:16%;font-size:80px">🌲</span>`,
+`<span class="p" id="lantern" style="left:64%;bottom:52%;font-size:60px">🏮</span><span class="p" id="gate" style="left:66%;bottom:14%;font-size:130px">🚪</span>`,
+`<span class="p" style="left:62%;bottom:13%;font-size:clamp(110px,30vw,160px)">🏚️</span><div class="chest" id="chest" style="left:44%;bottom:12%"><b></b><i></i></div>`,
+`<span class="p" style="left:42%;bottom:12%;font-size:70px">🔥</span><span class="p" style="left:60%;bottom:12%;font-size:56px">🐇</span><span class="p" style="left:72%;bottom:12%;font-size:56px">🦔</span><span class="p" style="left:84%;bottom:12%;font-size:56px">🐿️</span><div class="chest open" style="left:54%;bottom:11%"><b></b><i></i></div>`];
+async function walkTo(i){scene.dataset.stage=i;document.querySelectorAll('.dot').forEach((d,j)=>d.className='dot'+(j<i?' done':j==i?' now':''));
+ $('#panel').innerHTML='';$('#props').innerHTML=P[i];pip.style.transition='none';pip.style.left='8%';void pip.offsetWidth;pip.style.transition='';
+ scene.classList.add('walk');pip.classList.add('walking');
+ ria(['Off we go!','Pip hears a river...','Look! A lantern!','A barn! Come on!','A warm campfire!'][i]);await sleep(2300);scene.classList.remove('walk');pip.classList.remove('walking')}
+const S=[
+async()=>{
+ await voice({text:"Pip lost his hat! Tap the sounds, slide them together, then SAY the word!",speak:"Pip is looking for his favourite hat. Tap each sound, slide them together, and say the word out loud.",big:sb(['c','a','p']),skill:'blend',hint:"Slide them: c... ap... cap! Try again!",check:t=>/\b(cap|kap|capp)\b/.test(t),fb:{text:"Which picture says c-a-p?",big:sb(['c','a','p']),skill:'blend',hint:"Slide them: c... ap... cap!",opts:[{h:'🧢<small>cap</small>',ok:1,s:'cap'},{h:'🐱<small>cat</small>',s:'cat'},{h:'🥤<small>cup</small>',s:'cup'}]}});
+ $('#hat').style.display='none';pip.querySelector('.hat').style.display='block';
+ await voice({text:"A mysterious box under the bush! What do you think is inside? Tell me!",speak:"Look! A big mysterious box under the bush. What do you think might happen if we open it? Tell me!",big:'📦❓',skill:'anticip',hint:"Tell me more! Is there a friend inside, or a map?",check:t=>t.trim().split(/\s+/).length>=3,fb:{text:"What might be inside?",big:'📦❓',skill:'anticip',opts:[{h:'🐿️<small>a friend</small>',ok:1},{h:'🗺️<small>a map</small>',ok:1},{h:'🍎<small>snacks</small>',ok:1}]}});
+ await move(52);$('#box').style.animation='shake .4s 3';await sleep(1300);$('#box').textContent='🐿️';$('#box').style.animation='';ria("A squirrel friend! Hello!");await sleep(2000)},
+async()=>{
+ const D=[['sh',[['🐟','fish',1],['🌳','tree'],['🧢','cap']],"shhh"],['ch',[['🐔','chick',1],['🐟','fish'],['⛵','boat']],"chuh"],['th',[['👍','thumb',1],['🐚','shell'],['🌳','tree']],"thhh"],['ee',[['🌳','tree',1],['👍','thumb'],['🐔','chick']],"eee"],['oa',[['⛵','boat',1],['🐟','fish'],['🧢','cap']],"ohh"]];
+ for(let i=0;i<5;i++){const d=D[i];
+  await ask({text:`Tap the stone's secret sound. Which picture has it?`,speak:"Tap the letters to hear their secret sound. Which picture has this sound in it?",big:sb([d[0]]),skill:'digraph',hint:"These two letters are best friends. They make one sound: "+d[2],opts:d[1].map(x=>({h:`${x[0]}<small>${x[1]}</small>`,s:x[1],ok:x[2]}))});
+  $('#st'+i).style.background='#ffe27a';await move(SX[i]-9,1)}
+ await voice({text:"Last jump! Slide the sounds b - oa - t and SAY the word!",speak:"Last jump! Tap each sound, slide them together, and say the word out loud.",big:sb(['b','oa','t']),skill:'digraphblend',hint:"b... oat... boat! Try again!",check:t=>/\b(boat|bolt|boot)\b/.test(t)&&!/\b(bolt|boot)\b/.test(t),fb:{text:"Which picture says b-oa-t?",big:sb(['b','oa','t']),skill:'digraphblend',hint:"b... oat... boat!",opts:[{h:'⛵<small>boat</small>',ok:1,s:'boat'},{h:'🐟<small>fish</small>',s:'fish'},{h:'🧢<small>cap</small>',s:'cap'}]}});
+ await move(80)},
+async()=>{
+ const W=['I','can','see','the','big','green','tree.'];
+ const tapRead=()=>new Promise(done=>{let n=0;$('#panel').innerHTML=`<div class="big" style="font-size:30px">Tap each word in order ➡️</div><div class="big">${W.map((w,i)=>`<button class="chip" data-i="${i}">${w}</button>`).join('')}</div>`;
+  ria("Tap each word from the start, going this way.",'Read the lantern words with me. Tap each word, starting here, and go this way.');
+  document.querySelectorAll('.chip').forEach(c=>c.onclick=()=>{const i=+c.dataset.i;if(i===n){c.classList.add('read');say(W[i].replace('.',''));n++;if(n==W.length){rec('tracking',res.tracking!=='amber');star();setTimeout(done,1200)}}else{rec('tracking',false);ria("Start at the first word and go this way ➡️")}})});
+ await voice({text:"Read the lantern words out loud! Point with your finger.",speak:"Look at the lantern. Point with your finger and read the sentence out loud.",big:`<div style="width:100%;font-size:24px">👆 Read it out loud!</div>${W.map(w=>`<span class="chip" style="display:inline-grid;place-items:center">${w}</span>`).join('')}`,skill:'read',live:t=>{const s=t.split(/\W+/);document.querySelectorAll('.chip').forEach((c,i)=>{if(s.includes(W[i].replace('.','').toLowerCase()))c.classList.add('read')})},check:t=>{const s=t.split(/\W+/);return W.filter(w=>s.includes(w.replace('.','').toLowerCase())).length>=5},hint:"Start at the first word: I... can... see...",fb:tapRead});
+ await voice({text:"Pip points at a tricky word. Can you say it?",speak:"This word is tricky. It does not play by the rules. Can you say it?",big:'<span class="chip" style="display:inline-grid;place-items:center">the</span>',skill:'cew',hint:"Tricky word! It says 'the'.",check:t=>/\b(the|thee|duh)\b/.test(t),fb:{text:"Tap the tricky word that says 'the'.",speak:"One word is tricky. It says the. Can you find it?",skill:'cew',hint:"Tricky word! It says 'the'.",opts:[{h:'can',s:'can'},{h:'the',ok:1,s:'the'},{h:'big',s:'big'}]}});
+ await ask({text:"What did Pip see?",speak:"I can see the big green tree. What did Pip see?",skill:'sentence',hint:"Listen: I can see the big green tree.",opts:[{h:'🏠',s:'house'},{h:'🌳',ok:1,s:'tree'},{h:'🐟',s:'fish'}]});
+ $('#lantern').style.filter='drop-shadow(0 0 20px gold)';$('#gate').textContent='🌳';ria("The gate is open!");await sleep(1200);await move(60)},
+async()=>{
+ await ask({text:"What should we write for the forest keeper? Say it out loud!",speak:"Pip wants to open the chest. What sentence should we write? Say it out loud first.",skill:null,opts:[{h:'🦊🗺️<small>Pip had a map</small>',ok:1},{h:'🐕🦴<small>The dog had a bone</small>',ok:1}]});
+ const F=['?','?','?'],St=[['h',['h','m','s']],['a',['e','a','o']],['d',['b','d','t']]],H=["First sound: huh.","Stretch it like a band: h-aaaa-d. What is in the middle?","Last sound: duh."];
+ const sl=()=>`<div style="width:100%;font-size:26px">Let's write <b>had</b>. Tap the sounds!</div>${sb(['h','a','d'])}<div style="width:100%">${F.map(x=>`<span class="slot">${x}</span>`).join('')}</div>`;
+ for(let i=0;i<3;i++){await ask({text:["What is the FIRST sound in had? huh!","What is the MIDDLE sound in had? h-aaa-d","What is the LAST sound in had? duh!"][i],big:sl(),skill:'spell',hint:H[i],opts:St[i][1].map(l=>({h:l,ok:l==St[i][0],s:SW[l]}))});F[i]=St[i][0]}
+ $('#panel').innerHTML=`<div class="big">${F.map(x=>`<span class="slot">${x}</span>`).join('')} ✍️</div>`;ria("You wrote had! Pip had a map!");await sleep(2200);
+ await move(40);$('#chest').classList.add('open');ria("Click! The chest is open!");await sleep(2000)},
+async()=>{
+ let C=[['🎒','packs his bag'],['🌊','crosses the river'],['🏚️','opens the barn']],left=C.map((c,i)=>({c,i})).sort(()=>Math.random()-.5);
+ for(let k=0;k<3;k++){const need=k;await ask({text:["What happened FIRST?","What happened NEXT?","What happened LAST?"][k]+" Pip...",speak:["Let's tell our story. What happened first?","What happened next?","And what happened last?"][k],skill:'sequence',hint:"Think about our adventure from the start.",opts:left.map(o=>({h:`${o.c[0]}<small>Pip ${o.c[1]}</small>`,ok:o.i===need}))});left=left.filter(o=>o.i!==need)}
+ await ask({text:"Pip was curious about the box. Which face looks curious?",speak:"Curious means wanting to find out. Pip was curious about the box. Which face looks curious?",skill:'vocab',hint:"Curious means wanting to find things out.",opts:[{h:'🧐',ok:1},{h:'😴'},{h:'😠'}]});
+ await voice({text:"Hold Pip and tell me our story! First... Then... After that...",speak:"Hold Pip the puppet and tell me our whole story from the very beginning. Start with first, then, after that.",big:'🦊🎒🌊🏚️',skill:'retell',hint:"Tell me more! Start with FIRST...",check:t=>t.trim().split(/\s+/).length>=6,grade:t=>(t.match(/\b(first|then|after that|next|because)\b/g)||[]).length>=2,fb:{text:"Tell a grown-up our story, then tap!",skill:null,opts:[{h:'🎤<small>I told my story!</small>',ok:1}]}})}];
+async function play(){res={};H={};stars=0;star();stars=0;$('#stars').textContent='⭐ 0';for(let i=0;i<5;i++){await walkTo(i);await S[i]();$('#panel').innerHTML=''}
+ document.querySelectorAll('.dot').forEach(d=>d.className='dot done');$('#end').classList.remove('hide');$('#endstars').textContent=`You collected ${stars} stars!`;ria("We found the Golden Chest! Hooray!");
+ for(let i=0;i<36;i++){const s=document.createElement('span');s.className='conf';s.textContent=pick(['🎉','⭐','🎊','✨','🍀']);s.style.left=Math.random()*100+'vw';s.style.animationDelay=Math.random()*1.5+'s';document.body.appendChild(s);setTimeout(()=>s.remove(),5500)}}
+const L={read:['Reads sentence aloud','Tracks left-to-right, reads fluently'],retell:['Story retelling (own words)','Uses first/then/because + story words'],blend:['CVC sound-blending (c-a-p)','Blends independently / needs sound-sliding'],anticip:['Anticipation','Offers a prediction'],digraph:['Digraph knowledge (sh ch th ee oa)','Secure / confuses digraph with 2 letters'],digraphblend:['Blending with digraph (b-oa-t)','Reads boat / needs support'],tracking:['Left-to-right tracking','Tracks in order / loses direction'],cew:['Common exception word "the"','Reads by sight / tries to decode'],sentence:['Sentence comprehension','Links words to meaning'],spell:['Phoneme representation (h-a-d)','Initial, medial, final sounds'],sequence:['Story sequencing','Orders events correctly'],vocab:['Vocabulary: curious','Understands new word']};
+$('#grown').onclick=()=>{$('#sum').classList.remove('hide');$('#sum').innerHTML=`<div style="max-width:720px;margin:auto"><button class="go" id="x" style="background:#7a5cc0;font-size:22px">✖ Close</button><h2>Practitioner quick-scan</h2><table><tr><th>Skill</th><th>First-try status</th><th>Notes</th></tr>${Object.keys(L).map(k=>`<tr><td>${L[k][0]}</td><td>${res[k]=='green'?'🟢 Expected':res[k]?'🟡 Emerging':'⚪ Not asked'}</td><td>${L[k][1]}${H[k]?'<br>🗣️ “'+H[k]+'”':''}</td></tr>`).join('')}<tr><td>Oral composition</td><td>👀 Observe</td><td>Did the child say a full idea aloud?</td></tr><tr><td>Pencil grip &amp; letter formation</td><td>👀 Observe</td><td>Practise on paper or tablet</td></tr><tr><td>Story retelling</td><td>👀 Observe</td><td>First / then / after that, with "because"</td></tr></table><p>🟡 = needed a second try or help. Child taps are tracked automatically; oral tasks need adult observation.</p></div>`;$('#x').onclick=()=>$('#sum').classList.add('hide')};
+$('#start').onclick=()=>{$('#intro').classList.add('hide');say('Hello!');play()};
+$('#again').onclick=()=>{$('#end').classList.add('hide');play()};
+</script></body></html>
